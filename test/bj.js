@@ -1,3 +1,4 @@
+
 score_joueur = 0
 score_banque = 0
 
@@ -8,6 +9,9 @@ var setupListeners = function(){
   BoutonCarte.addEventListener("click",ajoutImgDansDiv);
   var BoutonReste = document.getElementById("reste");
   BoutonReste.addEventListener("click",ajoutImgBanque);
+  
+  var BoutonRejouer = document.getElementById("rejouer");
+  BoutonRejouer.addEventListener("click", rejouer);
 }
 
 /* Choisi un indice aleatoire d'une carte dans la liste tab
@@ -23,7 +27,8 @@ var ImageJoueur = function() {
   image2=document.getElementById("image2");
   image2.src=tab[N1]
   carteJoueur.push(tab[N1])
-  ini = tab[N1]; //tout ceci n'est pas tres optimise hehe
+  ini = tab[N1]; 
+  //tab.splice(N1,1);
   valeur_ini = RecupValeurCarte(ini);
   score_joueur = score_joueur + valeur_ini;
   panneau_score = document.getElementById("point_joueur");
@@ -35,8 +40,9 @@ var ImageBanque = function() {
   N2 = getRandomIntInclusive(0,51);
   image1=document.getElementById("image1");
   image1.src=tab[N2];
-  ini_banque = tab[N2]; //tout ceci n'est pas tres optimise non plus hehe
-  
+  ini_banque = tab[N2]; 
+ // tab.splice(N2,1) //pour ne pas tirer 2 fois la meme carte pendant une partie, mais ca ne marche pas 
+
   valeur_ini_banque = RecupValeurCarte(ini_banque);
   score_banque = score_banque+ valeur_ini_banque;
   panneau_score_banque = document.getElementById("point_banque");
@@ -55,6 +61,7 @@ var creerImg = function (chemin) {
 var ajoutImgDansDiv = function () {
     N3 = getRandomIntInclusive(0,51);
     var chemin = tab[N3];
+    //tab = tab.splice(N3,1);
     var newImg = creerImg(chemin);
 	  var divJS = document.getElementById('maDiv');
     divJS.appendChild(newImg);
@@ -66,8 +73,8 @@ var ajoutImgDansDiv = function () {
     panneau_score.innerHTML=score_joueur;
 
     if (score_joueur > 21 ) { //ca ne marche pas
-      var perdu = "PERDU"
-      console.log(perdu);
+      perdu = document.getElementById("perdu");
+      perdu.innerHTML = "C'est perdu!";
     }
 }
 
@@ -76,6 +83,7 @@ var ajoutImgDansDiv = function () {
 /* calcul des points de la carte
 */
 var RecupValeurCarte = function(chemin) {
+
   var sep=chemin.split('.');
   x=sep[0]
   valeur = x%13
@@ -88,8 +96,10 @@ var RecupValeurCarte = function(chemin) {
 }
 
 var ajoutImgBanque = function(chemin){
+  for (var i = 4; i < 8; i++){
   N4 = getRandomIntInclusive(0,51);
   var chemin = tab[N4];
+  //tab.splice(N4, 1);
   var newImg = creerImg(chemin);
   var divJS_banque = document.getElementById('maBanq');
     divJS_banque.appendChild(newImg);
@@ -100,9 +110,14 @@ var ajoutImgBanque = function(chemin){
     panneau_score = document.getElementById("point_banque");
     panneau_score.innerHTML=score_banque;
     if (score_banque > 21 ) { //ca ne marche pas
-      var gagne = "GAGNE"
-      console.log(gagne);
+      gagne = document.getElementById("gagne");
+      gagne.innerHTML= "C'est gagné !";
     }
+}
+}
+
+var rejouer = function(){
+	location.reload();
 }
 
 //DEBUT
