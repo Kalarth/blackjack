@@ -91,35 +91,45 @@ var ajoutImgDansDiv = function () {
   panneau_score = document.getElementById("point_joueur");
   panneau_score.innerHTML=score_joueur;
   console.log(carteJoueur);
-  if (score_joueur > 21 ) { //ca ne marche pas
-    var perdu = "PERDU";
-    console.log(perdu);
+  if (score_joueur > 21 ) { // marche ok
+    perdu = document.getElementById("perdu");
+    perdu.innerHTML = "C'est perdu!";
+  }
+  if (score_joueur === 21){ // ne marche pas
+    gagne = document.getElementsById("gagne");
+    gagne.innerHTML="C'est gagné !";
   }
   return carteJoueur
 }
 
 var ajoutImgBanque = function(){
+  for (var i = 4; i < 8; i++){
+    var N4 = getRandomIntInclusive(0,51-carteCompteur);
+    var chemin = tab[N4];
 
-  var N4 = getRandomIntInclusive(0,51-carteCompteur);
-  var chemin = tab[N4];
+    var newImg = creerImg(chemin);
+    var divJS_banque = document.getElementById('maBanq');
+    divJS_banque.appendChild(newImg);
 
-  var newImg = creerImg(chemin);
-  var divJS_banque = document.getElementById('maBanq');
-  divJS_banque.appendChild(newImg);
+    Deletefromtab(tab,N4);
+    carteCompteur=carteCompteur+1;
 
-  Deletefromtab(tab,N4);
-  carteCompteur=carteCompteur+1;
-
-  carteBanque.push(chemin);
-  score_banque = score_banque + RecupValeurCarte(chemin);
-  panneau_score = document.getElementById("point_banque");
-  panneau_score.innerHTML=score_banque;
-  console.log(carteBanque);
-  if (score_banque > 21 ) { //ca ne marche pas
-    var gagne = "GAGNE";
-    console.log(gagne);
+    carteBanque.push(chemin);
+    score_banque = score_banque + RecupValeurCarte(chemin);
+    panneau_score = document.getElementById("point_banque");
+    panneau_score.innerHTML=score_banque;
+    console.log(carteBanque);
+    if ((score_banque > score_joueur) && (score_banque < 21) ){ //ne marche pas 
+      perdu = document.getElementById("perdu");
+      perdu.innerHTML = "C'est perdu !";
+    } else {
+      gagne = document.getElementById("gagne");
+      gagne.innerHTML= "C'est gagné !";
+    }
+    
   }
-  return carteBanque
+    return carteBanque
+ 
 }
 
 
