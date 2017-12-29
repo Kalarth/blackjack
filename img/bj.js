@@ -21,24 +21,17 @@ var getRandomIntInclusive = function (min, max) {
 }
 
 var Deletefromtab = function (tab, N){
-  //Efface la case du tableau des cartes a chaque tirage.
   tab.splice(N,1);
   console.log(tab);
   return tab
 }
 
 var ImageJoueur = function(carteJoueur) {
-  var N1 = getRandomIntInclusive(0,51-carteCompteur);
-  //On réduis le max a mesure que le tableau se videra.
-
+  var N1 = getRandomIntInclusive(0,51);
   image2=document.getElementById("image2");
   image2.src=tab[N1];
   carteJoueur.push(tab[N1]);
   ini = tab[N1]; //tout ceci n'est pas tres optimise hehe
-
-  Deletefromtab(tab,N1);
-  carteCompteur=carteCompteur+1;
-
   valeur_ini = RecupValeurCarte(ini);
   score_joueur = score_joueur + valeur_ini;
   panneau_score = document.getElementById("point_joueur");
@@ -49,16 +42,11 @@ var ImageJoueur = function(carteJoueur) {
 
 
 var ImageBanque = function(carteBanque) {
-  var N2 = getRandomIntInclusive(0,51-carteCompteur);
-
+  var N2 = getRandomIntInclusive(0,51);
   image1=document.getElementById("image1");
   image1.src=tab[N2];
   carteBanque.push(tab[N2]);
   ini_banque = tab[N2]; //tout ceci n'est pas tres optimise non plus hehe
-
-  Deletefromtab(tab,N2);
-  carteCompteur=carteCompteur+1;
-
   valeur_ini_banque = RecupValeurCarte(ini_banque);
   score_banque = score_banque+ valeur_ini_banque;
   panneau_score_banque = document.getElementById("point_banque");
@@ -77,15 +65,12 @@ var creerImg = function (chemin) {
 }
 
 var ajoutImgDansDiv = function () {
-  var N3 = getRandomIntInclusive(0,51-carteCompteur);
+  var N3 = getRandomIntInclusive(0,51);
   var chemin = tab[N3];
 
   var newImg = creerImg(chemin);
   var divJS = document.getElementById('maDiv');
   divJS.appendChild(newImg);
-
-  Deletefromtab(tab,N3);
-  carteCompteur=carteCompteur+1;
 
   //Recalcule le score en fonction de la nouvelle carte
   carteJoueur.push(chemin);
@@ -102,16 +87,12 @@ var ajoutImgDansDiv = function () {
 
 var ajoutImgBanque = function(){
 
-  var N4 = getRandomIntInclusive(0,51-carteCompteur);
+  var N4 = getRandomIntInclusive(0,51);
   var chemin = tab[N4];
 
   var newImg = creerImg(chemin);
   var divJS_banque = document.getElementById('maBanq');
   divJS_banque.appendChild(newImg);
-
-  Deletefromtab(tab,N4);
-  carteCompteur=carteCompteur+1;
-
   carteBanque.push(chemin);
   score_banque = score_banque + RecupValeurCarte(chemin);
   panneau_score = document.getElementById("point_banque");
@@ -152,6 +133,5 @@ var tab=["01.BMP","02.BMP","03.BMP","04.BMP","05.BMP","06.BMP","07.BMP","08.BMP"
 var val = [];
 var carteJoueur=[];
 var carteBanque=[];
-var carteCompteur=0;  //compte combien de cartes on a tiré
 
 window.addEventListener("load",setupListeners);
