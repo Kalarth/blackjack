@@ -22,7 +22,7 @@ var getRandomIntInclusive = function (min, max) {
 
 var Deletefromtab = function (tab, N){
   tab.splice(N,1);
-  console.log(tab);
+  //console.log(tab);
   return tab
 }
 
@@ -91,45 +91,61 @@ var ajoutImgDansDiv = function () {
   panneau_score = document.getElementById("point_joueur");
   panneau_score.innerHTML=score_joueur;
   console.log(carteJoueur);
+  var conditionVictoire = document.getElementById("gagne_perdu");
   if (score_joueur > 21 ) { // marche ok
-    perdu = document.getElementById("perdu");
-    perdu.innerHTML = "C'est perdu!";
+
+    conditionVictoire.innerHTML = "C'est perdu!";
   }
-  if (score_joueur === 21){ // ne marche pas
-    gagne = document.getElementsById("gagne");
-    gagne.innerHTML="C'est gagné !";
+  if (score_joueur == 21){ // ne marche pas
+
+    conditionVictoire.innerHTML="C'est gagné !";
   }
   return carteJoueur
 }
 
 var ajoutImgBanque = function(){
   for (var i = 4; i < 8; i++){
-    var N4 = getRandomIntInclusive(0,51-carteCompteur);
-    var chemin = tab[N4];
+    //calcul du pourcentage de chance de perdre en tirant une carte.
+    for (var j = 0; j < tab.length; j++) {
+      var cpt=0;
+      var n =tab[j];
+      var valeur_n=RecupValeurCarte(n);
+      if (score_banque+valeur_n > 21) {
+        cpt=cpt+1;
 
-    var newImg = creerImg(chemin);
-    var divJS_banque = document.getElementById('maBanq');
-    divJS_banque.appendChild(newImg);
-
-    Deletefromtab(tab,N4);
-    carteCompteur=carteCompteur+1;
-
-    carteBanque.push(chemin);
-    score_banque = score_banque + RecupValeurCarte(chemin);
-    panneau_score = document.getElementById("point_banque");
-    panneau_score.innerHTML=score_banque;
-    console.log(carteBanque);
-    if ((score_banque > score_joueur) && (score_banque < 21) ){ //ne marche pas 
-      perdu = document.getElementById("perdu");
-      perdu.innerHTML = "C'est perdu !";
-    } else {
-      gagne = document.getElementById("gagne");
-      gagne.innerHTML= "C'est gagné !";
+      }
     }
-    
+    var chance_defaite = (cpt*100)/tab.length;
+
+    if ((chance_defaite < 25) && (score_banque < 21) && (score_banque < score_joueur))  {
+      var N4 = getRandomIntInclusive(0,51-carteCompteur);
+      var chemin = tab[N4];
+
+      var newImg = creerImg(chemin);
+      var divJS_banque = document.getElementById('maBanq');
+      divJS_banque.appendChild(newImg);
+
+      Deletefromtab(tab,N4);
+      carteCompteur=carteCompteur+1;
+
+      carteBanque.push(chemin);
+      score_banque = score_banque + RecupValeurCarte(chemin);
+      panneau_score = document.getElementById("point_banque");
+      panneau_score.innerHTML=score_banque;
+      console.log(carteBanque);
+    }
+  }
+
+  var conditionVictoire = document.getElementById("gagne_perdu");
+  if ((score_banque < score_joueur) && (score_joueur <= 21) || (score_banque > 21) && (score_joueur < 21)) { //ne marche pas
+    conditionVictoire.innerHTML= "C'est gagné !";
+
+  }
+  else {
+    conditionVictoire.innerHTML = "C'est perdu !";
+
   }
     return carteBanque
- 
 }
 
 

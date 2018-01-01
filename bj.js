@@ -21,16 +21,14 @@ var getRandomIntInclusive = function (min, max) {
 }
 
 var Deletefromtab = function (tab, N){
-  //Efface la case du tableau des cartes a chaque tirage.
   tab.splice(N,1);
-  console.log(tab);
+  //console.log(tab);
   return tab
 }
 
 var ImageJoueur = function(carteJoueur) {
   var N1 = getRandomIntInclusive(0,51-carteCompteur);
-  //On réduis le max a mesure que le tableau se videra.
-
+  console.log(N1);
   image2=document.getElementById("image2");
   image2.src=tab[N1];
   carteJoueur.push(tab[N1]);
@@ -50,7 +48,7 @@ var ImageJoueur = function(carteJoueur) {
 
 var ImageBanque = function(carteBanque) {
   var N2 = getRandomIntInclusive(0,51-carteCompteur);
-
+  console.log(N2);
   image1=document.getElementById("image1");
   image1.src=tab[N2];
   carteBanque.push(tab[N2]);
@@ -93,35 +91,61 @@ var ajoutImgDansDiv = function () {
   panneau_score = document.getElementById("point_joueur");
   panneau_score.innerHTML=score_joueur;
   console.log(carteJoueur);
-  if (score_joueur > 21 ) { //ca ne marche pas
-    var perdu = "PERDU";
-    console.log(perdu);
+  var conditionVictoire = document.getElementById("gagne_perdu");
+  if (score_joueur > 21 ) { // marche ok
+
+    conditionVictoire.innerHTML = "C'est perdu!";
+  }
+  if (score_joueur == 21){ // ne marche pas
+
+    conditionVictoire.innerHTML="C'est gagné !";
   }
   return carteJoueur
 }
 
 var ajoutImgBanque = function(){
+  for (var i = 4; i < 8; i++){
+    //calcul du pourcentage de chance de perdre en tirant une carte.
+    for (var j = 0; j < tab.length; j++) {
+      var cpt=0;
+      var n =tab[j];
+      var valeur_n=RecupValeurCarte(n);
+      if (score_banque+valeur_n > 21) {
+        cpt=cpt+1;
 
-  var N4 = getRandomIntInclusive(0,51-carteCompteur);
-  var chemin = tab[N4];
+      }
+    }
+    var chance_defaite = (cpt*100)/tab.length;
 
-  var newImg = creerImg(chemin);
-  var divJS_banque = document.getElementById('maBanq');
-  divJS_banque.appendChild(newImg);
+    if ((chance_defaite < 25) && (score_banque < 21) && (score_banque < score_joueur))  {
+      var N4 = getRandomIntInclusive(0,51-carteCompteur);
+      var chemin = tab[N4];
 
-  Deletefromtab(tab,N4);
-  carteCompteur=carteCompteur+1;
+      var newImg = creerImg(chemin);
+      var divJS_banque = document.getElementById('maBanq');
+      divJS_banque.appendChild(newImg);
 
-  carteBanque.push(chemin);
-  score_banque = score_banque + RecupValeurCarte(chemin);
-  panneau_score = document.getElementById("point_banque");
-  panneau_score.innerHTML=score_banque;
-  console.log(carteBanque);
-  if (score_banque > 21 ) { //ca ne marche pas
-    var gagne = "GAGNE";
-    console.log(gagne);
+      Deletefromtab(tab,N4);
+      carteCompteur=carteCompteur+1;
+
+      carteBanque.push(chemin);
+      score_banque = score_banque + RecupValeurCarte(chemin);
+      panneau_score = document.getElementById("point_banque");
+      panneau_score.innerHTML=score_banque;
+      console.log(carteBanque);
+    }
   }
-  return carteBanque
+
+  var conditionVictoire = document.getElementById("gagne_perdu");
+  if ((score_banque < score_joueur) && (score_joueur <= 21) || (score_banque > 21) && (score_joueur < 21)) { //ne marche pas
+    conditionVictoire.innerHTML= "C'est gagné !";
+
+  }
+  else {
+    conditionVictoire.innerHTML = "C'est perdu !";
+
+  }
+    return carteBanque
 }
 
 
@@ -152,6 +176,6 @@ var tab=["01.BMP","02.BMP","03.BMP","04.BMP","05.BMP","06.BMP","07.BMP","08.BMP"
 var val = [];
 var carteJoueur=[];
 var carteBanque=[];
-var carteCompteur=0;  //compte combien de cartes on a tiré
+var carteCompteur=0;
 
 window.addEventListener("load",setupListeners);
